@@ -1,15 +1,13 @@
 'use strict';
 function observable(obj) {
 	var events = {};
-	var serial = 0;
 
 	obj.on = function(name, callback) {
 		var names = name.split(" ");
 		for (var i in names) {
 			var split = resolveName(names[i])
-			var key = split.subname + '_' + serial++;
-			events[split.name] = events[split.name] || {};
-			events[split.name][key] = callback;
+			events[split.name] = events[split.name] || [];
+			events[split.name].push({namespace: split.namespace, callback: callback});
 		}
 	}
 
@@ -18,31 +16,29 @@ function observable(obj) {
 			delete events[name];
 		else {
 			var split = resolveName(name)
-			var reg = new RegExp(split.subname +'_\\d+');
-			var delAll = true;
-			for (var i in events[split.name]) {
-				if (reg.test(i))
+			for (var i in events[split.name])
+				 if (events[split.name][i].namespace == split.namespace)
 					delete events[split.name][i];
-				else 
-					delAll = false;
-			}
-			if (delAll) delete events[split.name];
+			if (events[split.name].length == 0) 
+				delete events[split.name];
 		}
 	}
 
 	obj.trigger = function(name) {
-		if (events[name] != undefined) {
+		var split = resolveName(name);
+		if (events[split.name] != undefined) {
 			var args = Array.prototype.slice.call(arguments,1);
-			for (var i in events[name])
-				events[name][i].apply(obj, args);	
-		}	
+			for (var i in events[split.name])
+				if (split.namespace == '' || events[split.name][i].namespace == split.namespace)
+					events[split.name][i].callback.apply(obj, args);	
+		}
 	}
 
 	function resolveName(name) {
 		var index = name.indexOf('.');
 		if (index == -1)
-			return {name: name, subname: ''};
+			return {name: name, namespace: ''};
 		else
-			return {name: name.substr(0, index), subname: name.substr(index + 1)};
+			return {name: name.substr(0, index), namespace: name.substr(index + 1)};
 	}
 }

@@ -57,6 +57,11 @@ test("Namespaces", function() {
 	obj.trigger('start', 50);
 	equal( obj.status, 'stop');
 	equal( obj.speed, 0);
+
+	var obj = new Car();
+	obj.trigger('start.speed', 50);
+	equal( obj.status, 'stop');
+	equal( obj.speed, 50);
 });
 
 test("Order",function() {
