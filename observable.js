@@ -1,4 +1,5 @@
 'use strict';
+window['observable']=observable;
 function observable(obj) {
 	var events = {};
 
@@ -19,14 +20,14 @@ function observable(obj) {
 			for (var i in events[split.name])
 				 if (events[split.name][i].namespace == split.namespace)
 					delete events[split.name][i];
-			if (events[split.name].length == 0) 
+			if (!events[split.name].length) 
 				delete events[split.name];
 		}
 	}
 
 	obj.trigger = function(name) {
 		var split = resolveName(name);
-		if (events[split.name] != undefined) {
+		if (events[split.name]) {
 			var args = Array.prototype.slice.call(arguments,1);
 			for (var i in events[split.name])
 				if (split.namespace == '' || events[split.name][i].namespace == split.namespace)
