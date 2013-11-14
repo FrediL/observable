@@ -13,10 +13,10 @@
 		}
 
 		obj.off = function(name) {
-			if (name.indexOf('.') == -1)
+			var split = resolveName(name)
+			if (split.namespace == '')
 				delete events[name];
 			else {
-				var split = resolveName(name)
 				for (var i in events[split.name])
 					 if (events[split.name][i].namespace == split.namespace)
 						delete events[split.name][i];
