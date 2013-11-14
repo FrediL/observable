@@ -4,7 +4,7 @@
 		var events = {};
 
 		obj.on = function(name, callback) {
-			var names = name.split(" ");
+			var names = name.split(/\s+/);
 			for (var i in names) {
 				var split = resolveName(names[i])
 				events[split.name] = events[split.name] || [];
