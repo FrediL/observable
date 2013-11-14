@@ -31,6 +31,21 @@ test("Trigger", function() {
 	equal( obj.status, 'stop');
 });
 
+test("On",function() {
+	var obj = new Object();
+	observable(obj);
+	obj.on('ev1 ev2',function() {
+		obj.val = true;
+	});
+
+	obj.val = false;
+	obj.trigger('ev1');
+	equal( obj.val, true);
+
+	obj.val = false;
+	obj.trigger('ev2');
+	equal( obj.val, true);
+});
 
 test("Off", function() {
 	var obj = new Car();
