@@ -17,7 +17,7 @@
 				delete events[name];
 			else {
 				for (var i in events[event.name])
-					 if (events[event.name][i].namespace == event.namespace)
+					if (events[event.name][i].namespace == event.namespace)
 						delete events[event.name][i];
 				if (!events[event.name].length)
 					delete events[event.name];
@@ -40,6 +40,6 @@
 				return {name: name, namespace: ''};
 			else
 				return {name: name.substr(0, index), namespace: name.substr(index + 1)};
-        }
-    }
+		}
+	}
 })(window);
